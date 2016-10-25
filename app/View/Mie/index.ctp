@@ -18,14 +18,24 @@
 					</thead>
 					<tbody>
 						<?php
-							foreach ($desembolsos as $reg): ?>
+							foreach ($desembolsos as $reg):
+								$this->EstablecimientoPrograma = ClassRegistry::init('EstablecimientoPrograma');
+								$establ = $this->EstablecimientoPrograma->find('first', array(
+									'conditions'=>array('EstablecimientoPrograma.id'=>$reg['Desembolso']['id_establecimiento_programa']),
+									'recursive'=>0
+									)
+								);
+						?>
 							<tr>
 								<td><?php echo str_pad($reg['Desembolso']['id'], 4, "0", STR_PAD_LEFT); ?>&nbsp;</td>
-								<td><?php echo h($reg['Desembolso']['id']); ?>&nbsp;</td>
+								<td><?php echo h($establ['Programa']['nombre']); ?>&nbsp;</td>
 								<td><?php echo h($reg['Desembolso']['cantidad']); ?>&nbsp;</td>
 								<td><?php echo h($reg['Desembolso']['nombre_banco']); ?>&nbsp;</td>
 								<td><?php echo h($reg['Desembolso']['fecha']); ?>&nbsp;</td>
-								<td><?php echo $this->Html->link(__('<i class="fa fa-folder"></i> Ver'), array('action' => 'ver', $reg['Desembolso']['id']), array('class' => 'btn btn-round btn-primary', 'escape' => false)); ?></td>
+								<td><?php echo $this->Html->link(__('<i class="fa fa-folder"></i> Ver'), array('action' => 'ver', $reg['Desembolso']['id']), array('class' => 'btn btn-round btn-primary', 'escape' => false));
+									echo '&nbsp;';
+									echo $this->Html->link(__('<i class="fa fa-edit"></i> Editar'), array('action' => 'edit', $reg['Desembolso']['id']), array('class' => 'btn btn-round btn-info', 'escape' => false));
+								 ?></td>
 							</tr>
 						<?php endforeach; ?>
 					</tbody>

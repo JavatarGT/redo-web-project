@@ -18,6 +18,7 @@
 					'after' => '</div>',
 					'error' => array('attributes' => array('wrap' => 'span', 'class' => 'help-inline')),
 				)));
+				echo $this->Form->hidden('id');
 				echo '<div class="row">';
 				echo $this->Form->input('id_programa', array('label' => array('text'=> 'Programa'), 'options' => $programas));
 				echo $this->Form->input('nombre_banco', array('label' => array('text'=> 'Nombre del Banco')));
@@ -32,7 +33,7 @@
 				echo $this->Form->input('persona_firma2', array('label' => array('text'=> 'Persona firma 2'), 'options' => $per));
 				echo $this->Form->input('observaciones', array('label' => array('text'=> 'Observaciones'), 'type' => 'textarea', 'rows' => 3));
 				echo '</div>';
-				$options = array('label' => 'Agregar', 'class' => 'btn btn-success', 'div' => false, 'escape' => false );
+				$options = array('label' => 'Editar', 'class' => 'btn btn-success', 'div' => false, 'escape' => false );
 				echo '<div class="ln_solid"></div>';
 				echo $this->Form->end($options); ?>
 			</div> <!-- /.x-content -->
@@ -42,7 +43,9 @@
 
 
 <?php $this->Js->buffer("
-	 $('#DesembolsoAgregarForm').bootstrapValidator({
+	var d = ($('#DesembolsoFecha').val()).split('-');
+	$('#DesembolsoFecha').val(d[2]+'/'+d[1]+'/'+d[0]);
+	 $('#DesembolsoEditForm').bootstrapValidator({
 		excluded: [':disabled'],
 		feedbackIcons: {
 			valid: 'glyphicon glyphicon-ok',
@@ -78,6 +81,17 @@
 				validators: {
 					notEmpty: {
 						message: 'Es necesario que indique una persona para firma 1'
+					}
+				}
+			},
+			\"data[Desembolso][fecha]\": {
+				validators: {
+					notEmpty: {
+						message: 'Debe ingresar una fecha'
+					},
+					date:{
+						format: 'DD/MM/YYYY',
+						message: 'Por favor, ingresar una fecha válida'
 					}
 				}
 			}

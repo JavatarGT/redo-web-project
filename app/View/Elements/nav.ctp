@@ -44,7 +44,7 @@
 							<li class="<?php if($this->params->controller == 'mie' && ($this->params->action == 'editar')) echo 'active';  ?>">
 								<?php echo $this->Html->link('Información',array('plugin' => null, 'controller' => 'mie','action' => 'editar'), array('escape' => false)); ?>
 							</li>
-							<li class="<?php if($this->params->controller == 'mie' && ($this->params->action == 'index')) echo 'active';  ?>">
+							<li class="<?php if($this->params->controller == 'mie' && ($this->params->action == 'index' || $this->params->action == 'agregar' || $this->params->action == 'ver')) echo 'active';  ?>">
 								<?php echo $this->Html->link('Desembolsos',array('plugin' => null, 'controller' => 'mie','action' => 'index'), array('escape' => false)); ?>
 							</li>
 							<li class="<?php if($this->params->controller == 'mie' && ($this->params->action == 'editar')) echo 'active';  ?>">

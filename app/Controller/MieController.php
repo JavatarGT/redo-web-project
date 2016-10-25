@@ -1,6 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
-// date_default_timezone_set('America/Guatemala');
+date_default_timezone_set('America/Guatemala');
 /**
  * Establecimientos Controller
  *
@@ -8,7 +8,7 @@ App::uses('AppController', 'Controller');
  */
 class MieController extends AppController {
 
-	public $uses = array('Establecimiento', 'Persona', 'Departamento', 'Municipio', 'EstablecimientoPrograma', 'Desembolso');
+	public $uses = array('Establecimiento', 'Persona', 'Departamento', 'Municipio', 'EstablecimientoPrograma', 'Desembolso', 'Programa');
 
 /**
  * index method
@@ -112,11 +112,12 @@ class MieController extends AppController {
 		if ($this->request->is('post')) {
 			$est = $this->EstablecimientoPrograma->find('first', array(
 				'EstablecimientoPrograma.id_establecimiento' => $id['Persona']['id_establecimiento'],
+				'EstablecimientoPrograma.id_programa'=>$this->request->data['Desembolso']['id_programa'],
 				'recursive' => -1
 				)
 			);
 			$this->request->data['Desembolso']['id_establecimiento_programa'] = $est['EstablecimientoPrograma']['id'];
-			$this->request->data['Desembolso']['fecha'] = date('Y-m-d', strtotime($this->request->data['Desembolso']['fecha']));
+			$this->request->data['Desembolso']['fecha'] = date('Y-d-m', strtotime($this->request->data['Desembolso']['fecha']));
 			$this->Desembolso->create();
 			if ($this->Desembolso->save($this->request->data)) {
 				$this->Session->setFlash(__('El registro de desembolso ha sido guardado'),'flash_success');
@@ -125,8 +126,20 @@ class MieController extends AppController {
 				$this->Session->setFlash(__('El registro de desembolso no ha sido guardado, por favor inténtelo de nuevo.'),'flash_fail');
 			}
 		}
-
 		$this->set(compact('personas'));
+		$ids = $this->EstablecimientoPrograma->find('list', array(
+			'conditions'=>array('EstablecimientoPrograma.id_establecimiento'=>$id['Persona']['id_establecimiento']),
+			'fields'=>array('EstablecimientoPrograma.id_programa'),
+			'recursive'=>-1
+			)
+		);
+		$programas = $this->Programa->find('list', array(
+			'conditions'=>array('Programa.id'=>$ids),
+			'fields'=>array('Programa.id','Programa.nombre'),
+			'recursive'=>-1
+			)
+		);
+		$this->set(compact('programas'));
 	}
 
 /**
@@ -183,6 +196,109 @@ class MieController extends AppController {
                             'fields' => array('Municipio.id','Municipio.nombre')
                         ));
 		$this->set(compact('municipios'));
+	}
+
+/**
+ * ver method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function ver($id = null) {
+		$this->layout = 'tables';
+		$this->set('title_for_layout', __('Ver Información de Desembolso'));
+		$this->Desembolso->id = $id;
+		if (!$this->Desembolso->exists()) {
+			throw new NotFoundException(__('Registro inválido'));
+		}
+		$desembolso = $this->Desembolso->read(null, $id);
+		$est = $this->EstablecimientoPrograma->find('first', array(
+				'conditions' => array('EstablecimientoPrograma.id' => $desembolso['Desembolso']['id_establecimiento_programa']),
+				'recursive' => 0
+				)
+			);
+		$persona1 = $this->Persona->find('first', array(
+				'conditions' => array('Persona.id' => $desembolso['Desembolso']['persona_firma1']),
+				'recursive' => -1
+				)
+			);
+		$persona2 = $this->Persona->find('first', array(
+				'conditions' => array('Persona.id' => $desembolso['Desembolso']['persona_firma2']),
+				'recursive' => -1
+				)
+			);
+		$desembolso['EstablecimientoPrograma'] = $est;
+		$desembolso['Persona1'] = $persona1['Persona'];
+		if(array_key_exists('Persona', $persona2))
+			$desembolso['Persona2'] = $persona2['Persona'];
+		$this->set('desembolso', $desembolso);
+	}
+
+/**
+ * edit method
+ *
+ * @return void
+ */
+	public function edit($id = null) {
+		$this->set('title_for_layout', __('Editar Desembolso'));
+		$idd = $this->Persona->find('first', array(
+					'conditions' => array(
+						'Persona.id' => AuthComponent::user('id_persona'),
+						'Persona.id_puesto' => 1
+						),
+					'recursive' => -1
+					)
+				);
+
+		$personas = $this->Persona->find('list', array(
+					'conditions' => array(
+						'Persona.id_establecimiento' => $idd['Persona']['id_establecimiento']
+						),
+					'fields' => array('Persona.id', 'Persona.nombre_completo'),
+					'recursive' => -1
+					)
+				);
+		$this->Desembolso->id = $id;
+		if (!$this->Desembolso->exists()) {
+			throw new NotFoundException(__('Registro inválido'));
+		}
+
+		if ($this->request->is('post') || $this->request->is('put')) {
+			$est = $this->EstablecimientoPrograma->find('first', array(
+				'EstablecimientoPrograma.id_establecimiento' => $idd['Persona']['id_establecimiento'],
+				'EstablecimientoPrograma.id_programa'=>$this->request->data['Desembolso']['id_programa'],
+				'recursive' => -1
+				)
+			);
+
+			$this->request->data['Desembolso']['id_establecimiento_programa'] = $est['EstablecimientoPrograma']['id'];
+			$this->request->data['Desembolso']['fecha'] = date('Y-m-d', strtotime($this->request->data['Desembolso']['fecha']));
+			// print_r($this->request->data);
+			if ($this->Desembolso->save($this->request->data)) {
+				$this->Session->setFlash(__('El registro de desembolso ha sido guardado'),'flash_success');
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('El registro de desembolso no ha sido guardado, por favor inténtelo de nuevo.'),'flash_fail');
+			}
+		}else{
+			$this->request->data = $this->Desembolso->read(null, $id);
+		}
+
+		$this->set(compact('personas'));
+		$ids = $this->EstablecimientoPrograma->find('list', array(
+			'conditions'=>array('EstablecimientoPrograma.id_establecimiento'=>$idd['Persona']['id_establecimiento']),
+			'fields'=>array('EstablecimientoPrograma.id_programa'),
+			'recursive'=>-1
+			)
+		);
+		$programas = $this->Programa->find('list', array(
+			'conditions'=>array('Programa.id'=>$ids),
+			'fields'=>array('Programa.id','Programa.nombre'),
+			'recursive'=>-1
+			)
+		);
+		$this->set(compact('programas'));
 	}
 
 }

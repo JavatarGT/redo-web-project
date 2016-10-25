@@ -151,7 +151,7 @@ class PersonasController extends AppController {
 			throw new NotFoundException(__('Registro inválido'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			$this->request->data['Persona']['fec_nacimiento'] = date('Y-m-d', strtotime($this->request->data['Persona']['fec_nacimiento']));
+			$this->request->data['Persona']['fec_nacimiento'] = date('Y-d-m', strtotime($this->request->data['Persona']['fec_nacimiento']));
 			if ($this->Persona->save($this->request->data)) {
 				$this->Session->setFlash(__('La información del personal ha sido guardada.'),'flash_success');
 				$this->redirect(array('action' => 'index'));
