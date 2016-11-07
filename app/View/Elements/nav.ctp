@@ -2,16 +2,19 @@
 	<div class="menu_section">
 		<h3>ADMINISTRACIÓN</h3>
 		<ul class="nav side-menu">
-			<li><a><i class="fa fa-home"></i> Inicio <span class="fa fa-chevron-down"></span></a>
+			<!-- <li><a><i class="fa fa-home"></i> Inicio <span class="fa fa-chevron-down"></span></a>
 				<ul class="nav child_menu">
 					<li><a href="#">Dashboard</a></li>
 				</ul>
-			</li>
+			</li> -->
+			
 			<li class="<?php if($this->params->controller == 'establecimientos' || $this->params->controller == 'tiposangres' || $this->params->controller == 'personas' || $this->params->controller == 'programas' || $this->params->controller == 'puestos') echo 'active'; ?>">
+
 				<a><i class="fa fa-edit"></i> Catálogos <span class="fa fa-chevron-down"></span></a>
 				<ul class="nav child_menu" <?php if($this->params->controller == 'establecimientos' || $this->params->controller == 'tiposangres' || $this->params->controller == 'personas' || $this->params->controller == 'puestos') echo ' style="display:block;"';  ?>>
 					<li class="<?php if($this->params->controller == 'programas' && ($this->params->action == 'index' || $this->params->action == 'agregar' || $this->params->action == 'editar' || $this->params->action == 'ver')) echo 'current-page';  ?>">
 						<?php echo $this->Html->link('Programas Escolares',array('plugin' => null, 'controller' => 'programas','action' => 'index'), array('escape' => false)); ?>
+
 					</li>
 					<li class="<?php if($this->params->controller == 'establecimientos' && ($this->params->action == 'index' || $this->params->action == 'agregar' || $this->params->action == 'editar' || $this->params->action == 'ver')) echo 'current-page';  ?>">
 						<?php echo $this->Html->link('Establecimientos',array('plugin' => null, 'controller' => 'establecimientos','action' => 'index'), array('escape' => false)); ?>
@@ -25,8 +28,10 @@
 					<li class="<?php if($this->params->controller == 'tiposangres' && ($this->params->action == 'index' || $this->params->action == 'agregar' || $this->params->action == 'editar' || $this->params->action == 'ver')) echo 'current-page';  ?>">
 						<?php echo $this->Html->link('Tipos de Sangre',array('plugin' => null, 'controller' => 'tiposangres','action' => 'index'), array('escape' => false)); ?>
 					</li>
+					
 				</ul>
 			</li>
+			
 			<?php 
 				$this->Persona = ClassRegistry::init('Persona');
 				$persona = $this->Persona->find('first', array(
@@ -37,26 +42,29 @@
 					'recursive' => -1
 					)
 				);
-				if(array_key_exists('Persona', $persona)){ ?>
-					<li class="<?php if($this->params->controller == 'mie') echo 'active'; ?>">
+				?>
+					<li class="<?php if($this->params->controller == 'mie' || $this->params->controller == 'compras') echo 'active'; ?>">
 						<a><i class="fa fa-list-alt"></i> Mi Establecimiento <span class="fa fa-chevron-down"></span></a>
-						<ul class="nav child_menu" <?php if($this->params->controller == 'mie') echo ' style="display:block;"';  ?>>
+						<ul class="nav child_menu" <?php if($this->params->controller == 'mie' || $this->params->controller == 'compras' || $this->params->controller == 'cons') echo ' style="display:block;"';  ?>>
+						<?php if(array_key_exists('Persona', $persona)){ ?>
 							<li class="<?php if($this->params->controller == 'mie' && ($this->params->action == 'editar')) echo 'active';  ?>">
 								<?php echo $this->Html->link('Información',array('plugin' => null, 'controller' => 'mie','action' => 'editar'), array('escape' => false)); ?>
 							</li>
 							<li class="<?php if($this->params->controller == 'mie' && ($this->params->action == 'index' || $this->params->action == 'agregar' || $this->params->action == 'ver')) echo 'active';  ?>">
 								<?php echo $this->Html->link('Desembolsos',array('plugin' => null, 'controller' => 'mie','action' => 'index'), array('escape' => false)); ?>
 							</li>
-							<li class="<?php if($this->params->controller == 'mie' && ($this->params->action == 'editar')) echo 'active';  ?>">
-								<?php echo $this->Html->link('Compras',array('plugin' => null, 'controller' => 'mie','action' => 'editar'), array('escape' => false)); ?>
+							<li class="<?php if($this->params->controller == 'compras' && ($this->params->action == 'index' || $this->params->action == 'agregar' || $this->params->action == 'editar' || $this->params->action == 'ver' || $this->params->action == 'index_cmp' || $this->params->action == 'ver_cmp')) echo 'active';  ?>">
+								<?php echo $this->Html->link('Compras',array('plugin' => null, 'controller' => 'compras','action' => 'index'), array('escape' => false)); ?>
+							</li>
+						<?php } ?>
+						<li class="<?php if($this->params->controller == 'cons' && ($this->params->action == 'index' || $this->params->action == 'agregar' || $this->params->action == 'ver')) echo 'active';  ?>">
+								<?php echo $this->Html->link('Constancia de Ingresos',array('plugin' => null, 'controller' => 'cons','action' => 'index'), array('escape' => false)); ?>
 							</li>
 						</ul>
 					</li>
-			<?php	}
-			?>
-			<li class="<?php if($this->params->controller == 'users' || $this->params->plugin == 'acl_manager' || $this->params->controller == 'groups') echo 'active'; ?>">
+			<li class="<?php if($this->params->controller == 'users' || $this->params->plugin == 'acl_manager' || $this->params->controller == 'groups' || $this->params->controller == 'authtmps') echo 'active'; ?>">
 				<a><i class="fa fa-user-secret"></i> Seguridad <span class="fa fa-chevron-down"></span></a>
-				<ul class="nav child_menu" <?php if($this->params->controller == 'users' || $this->params->plugin == 'acl_manager' || $this->params->controller == 'groups') echo ' style="display:block;"';  ?>>
+				<ul class="nav child_menu" <?php if($this->params->controller == 'users' || $this->params->plugin == 'acl_manager' || $this->params->controller == 'groups' || $this->params->controller == 'authtmps') echo ' style="display:block;"';  ?>>
 					<li class="<?php echo $this->params->plugin == 'acl_manager' ? 'active' : '';  ?>">
 						<?php echo $this->Html->link('Permisos ',array('plugin' => null, 'controller' => 'acl_manager','action' => 'acl'), array('escape' => false)); ?>
 					</li>
@@ -65,6 +73,9 @@
 					</li>
 					<li class="<?php if($this->params->controller == 'groups' && ($this->params->action == 'index' || $this->params->action == 'agregar' || $this->params->action == 'editar' || $this->params->action == 'ver')) echo 'current-page';  ?>">
 						<?php echo $this->Html->link('Grupos',array('plugin' => null, 'controller' => 'groups','action' => 'index'), array('escape' => false)); ?>
+					</li>
+					<li class="<?php if($this->params->controller == 'authtmps' && ($this->params->action == 'index' || $this->params->action == 'ver')) echo 'current-page';  ?>">
+						<?php echo $this->Html->link('Nuevos usuarios',array('plugin' => null, 'controller' => 'authtmps', 'action' => 'index'), array('escape' => false)); ?>
 					</li>
 				</ul>
 			</li>
@@ -76,7 +87,7 @@
 	<a data-toggle="tooltip" data-placement="top" title="Settings">
 		<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
 	</a>
-	<a data-toggle="tooltip" data-placement="top" title="FullScreen">++
+	<a data-toggle="tooltip" data-placement="top" title="FullScreen">
 		<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
 	</a>
 	<a data-toggle="tooltip" data-placement="top" title="Lock">

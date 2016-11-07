@@ -29,13 +29,13 @@ class MYPDF extends TCPDF {
     // //Page header
     public function Header() {
         // Logo
-        $image_file = 'img/psLogo.png';
-        $this->Image($image_file, 15, 10, 40, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        //$image_file = 'img/psLogo.png';
+        //this->Image($image_file, 15, 10, 40, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
         // Set font
-        $this->SetFont('helvetica', 'B', 14);
+        //$this->SetFont('helvetica', 'B', 14);
         // Title
         //$this->Cell(0, 15, $this->tit, 0, false, 'C', 0, '', 0, false, 'M', 'M');
-        $this->SetX(17);
+        //$this->SetX(17);
         $this->MultiCell(0, 5, $this->tit, 0, 'C', 0, 1, '', '', true, 0, false, true, 0, 'T', false);
         $this->SetFont('helvetica', 0, 10);
         $this->MultiCell(0, 5, $this->st, 0, 'C', 0, 1, '', '', true, 0, false, true, 0, 'T', false);

@@ -117,7 +117,9 @@ class MieController extends AppController {
 				)
 			);
 			$this->request->data['Desembolso']['id_establecimiento_programa'] = $est['EstablecimientoPrograma']['id'];
-			$this->request->data['Desembolso']['fecha'] = date('Y-d-m', strtotime($this->request->data['Desembolso']['fecha']));
+			$fecha = split('/', $this->request->data['Desembolso']['fecha']);
+			$this->request->data['Desembolso']['fecha']=$fecha[2].'-'.$fecha[1].'-'.$fecha[0];
+			
 			$this->Desembolso->create();
 			if ($this->Desembolso->save($this->request->data)) {
 				$this->Session->setFlash(__('El registro de desembolso ha sido guardado'),'flash_success');
@@ -240,7 +242,7 @@ class MieController extends AppController {
  *
  * @return void
  */
-	public function edit($id = null) {
+	public function edit($id = null, $programa = null) {
 		$this->set('title_for_layout', __('Editar Desembolso'));
 		$idd = $this->Persona->find('first', array(
 					'conditions' => array(
@@ -292,13 +294,14 @@ class MieController extends AppController {
 			'recursive'=>-1
 			)
 		);
-		$programas = $this->Programa->find('list', array(
+		$programas = $this->Programa->find('all', array(
 			'conditions'=>array('Programa.id'=>$ids),
 			'fields'=>array('Programa.id','Programa.nombre'),
 			'recursive'=>-1
 			)
 		);
 		$this->set(compact('programas'));
+		$this->set('id_programa', $programa);
 	}
 
 }

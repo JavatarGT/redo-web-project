@@ -39,7 +39,7 @@ class AclController extends AclManagerAppController {
 		$aros = Configure::read('AclManager.aros');
 		foreach ($aros as $aro) {
 			$limit = Configure::read("AclManager.{$aro}.limit");
-			$limit = empty($limit) ? 4 : $limit;
+			$limit = empty($limit) ? 1 : $limit;
 			$this->paginate[$this->{$aro}->alias] = array(
 				'recursive' => -1,
 				'limit' => $limit
@@ -53,7 +53,7 @@ class AclController extends AclManagerAppController {
 	public function drop() {
 		$this->Acl->Aco->deleteAll(array("1 = 1"));
 		$this->Acl->Aro->deleteAll(array("1 = 1"));
-		$this->Session->setFlash(__("Both ACOs and AROs have been dropped"));
+		$this->Session->setFlash(__("Se han eliminado las reglas ACOs y AROs."), 'flash_success');
 		$this->redirect(array("action" => "index"));
 	}
 	
@@ -62,9 +62,9 @@ class AclController extends AclManagerAppController {
 	 */
 	public function drop_perms() {
 		if ($this->Acl->Aro->Permission->deleteAll(array("1 = 1"))) {
-			$this->Session->setFlash(__("Permissions dropped"));
+			$this->Session->setFlash(__("Permisos Eliminados"), 'flash_fail');
 		} else {
-			$this->Session->setFlash(__("Error while trying to drop permissions"));
+			$this->Session->setFlash(__("Error mientras se eliminaban permisos"), 'flash_fail');
 		}
 		$this->redirect(array("action" => "index"));
 	}
@@ -142,6 +142,11 @@ class AclController extends AclManagerAppController {
 		}
 
 		$this->request->data = array('Perms' => $perms);
+		if ($Aro->alias == 'Group'){
+			$this->set('titulo', 'Grupo');
+		}else{
+			$this->set('titulo', 'Usuarios');
+		}
 		$this->set('aroAlias', $Aro->alias);
 		$this->set('aroDisplayField', $Aro->displayField);
 		$this->set(compact('acos', 'aros'));
@@ -293,7 +298,7 @@ class AclController extends AclManagerAppController {
 			$this->Acl->Aco->deleteAll(array('Aco.id' => $acoIds));
 		}
 		
-		$this->Session->setFlash(sprintf(__("%d ACOs have been created/updated"), $count));
+		$this->Session->setFlash(sprintf(__("%d regla (as) ACOs creadas/actualizadas"), $count), 'flash_success');
 		$this->redirect($this->request->referer());
 	}
 
@@ -367,7 +372,7 @@ class AclController extends AclManagerAppController {
 			}
 		}
 		
-		$this->Session->setFlash(sprintf(__("%d AROs have been created"), $count));
+		$this->Session->setFlash(sprintf(__("%d regla(as) AROs creadas"), $count), 'flash_success');
 		$this->redirect($this->request->referer());
 	}
 
@@ -470,8 +475,9 @@ class AclController extends AclManagerAppController {
 			$this->_authorizer = $object; 
 			break;
 		}
+		
 		if (empty($this->_authorizer)) {
-			$this->Session->setFlash(__("ActionAuthorizer could not be found"));
+			$this->Session->setFlash(__("Acción no encontrada"), 'flash_fail');
 			$this->redirect($this->referer());
 		}
 		return $this->_authorizer;

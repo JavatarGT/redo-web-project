@@ -19,8 +19,26 @@
 					'error' => array('attributes' => array('wrap' => 'span', 'class' => 'help-inline')),
 				)));
 				echo $this->Form->hidden('id');
-				echo '<div class="row">';
-				echo $this->Form->input('id_programa', array('label' => array('text'=> 'Programa'), 'options' => $programas));
+				echo '<div class="row">'; 
+				?>
+				<div class='form-group col-sm-6 col-lg-3 col-xs-12 has-feedback'>
+					<div class='controls'>
+						<label>Programa</label>
+						<select class="form-control"  name="data[Desembolso][id_programa]">
+						<!-- <option value="">--</option>} -->
+						<?php 
+							foreach ($programas as $key => $value) {
+								if($value['Programa']['id'] == $id_programa)
+									echo "<option value='".$value['Programa']['id']."' selected=\"selected\">".$value['Programa']['nombre']."</option>";
+								else
+									echo "<option value='".$value['Programa']['id']."'>".$value['Programa']['nombre']."</option>";
+							}
+						?>
+						</select>
+					</div>
+				</div>
+				<?php
+				// echo $this->Form->input('id_programa', array('label' => array('text'=> 'Programa'), 'options' => $programas));
 				echo $this->Form->input('nombre_banco', array('label' => array('text'=> 'Nombre del Banco')));
 				echo $this->Form->input('no_cheque', array('label' => array('text'=> 'No. Cheque')));
 				echo $this->Form->input('cantidad', array('label' => array('text'=> 'Cantidad Q.'), 'type' => 'text'));

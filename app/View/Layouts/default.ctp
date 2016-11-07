@@ -33,7 +33,14 @@
 		}
 	?>
 
-
+	<?php
+		$this->Persona = ClassRegistry::init('Persona');
+		$persona = $this->Persona->find('first', array(
+			'conditions'=>array('Persona.id'=>AuthComponent::user('id_persona')),
+			'recursive'=>-1
+			)
+		);
+	?>
 </head>
 <body class="nav-md">
 	<div class="container body">
@@ -49,24 +56,26 @@
 			<!-- menu profile quick info -->
 			<div class="profile">
 			  <div class="profile_pic">
-				<img src="<?php echo $this->webroot;?>/img/user.png" alt="..." class="img-circle profile_img">
+			  	<?php if($persona['Persona']['dir_imagen']==null){ ?>
+					<img src="<?php echo $this->webroot;?>/files/images/img1.jpg" alt="..." class="img-circle profile_img">
+				<?php } else { ?>
+					<!-- <img src="<?php echo $this->webroot;?>/img/user.png" alt="..." class="img-circle profile_img"> -->
+					<img class="img-circle profile_img" src="<?php echo $this->base.'/uploads/images/'.$persona['Persona']['dir_imagen'] ?>">
+				<?php } ?>
 			  </div>
 			  <div class="profile_info">
 				<span>Bienvenido,</span>
-				<h2>Juan Chiquin</h2>
+				<h2><?php echo $persona['Persona']['primer_nombre'].' '.$persona['Persona']['primer_apellido']; ?></h2>
 			  </div>
 			</div>
 			<!-- /menu profile quick info -->
-
 			<br />
-
 			<!-- sidebar menu -->
 			<?php echo $this->element('nav') ?>
 			<!-- /sidebar menu -->
-			
 		  </div>
 		</div>
-
+		
 		<!-- top navigation -->
 		<div class="top_nav">
 		  <div class="nav_menu">
@@ -77,19 +86,16 @@
 
 			  <ul class="nav navbar-nav navbar-right">
 				<li class="">
-				  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-					<img src="<?php echo $this->webroot;?>/img/user.png" alt="">Juan Chiquin
+				  <a class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+					<?php if($persona['Persona']['dir_imagen']==null){ ?>
+						<img src="<?php echo $this->webroot;?>/files/images/img1.jpg" alt="..."><?php echo $persona['Persona']['nombre_completo']; ?>
+					<?php } else { ?>
+						<img src="<?php echo $this->base.'/uploads/images/'.$persona['Persona']['dir_imagen'] ?>"><?php echo $persona['Persona']['nombre_completo']; ?>
+					<?php } ?>
 					<span class=" fa fa-angle-down"></span>
 				  </a>
 				  <ul class="dropdown-menu dropdown-usermenu pull-right">
 					<li><a href="<?php echo $this->webroot.'personas/perfil/'.AuthComponent::user('id_persona'); ?>"> Perfil</a></li>
-					<li>
-					  <a href="javascript:;">
-						<span class="badge bg-red pull-right">50%</span>
-						<span>Settings</span>
-					  </a>
-					</li>
-					<li><a href="javascript:;">Help</a></li>
 					<li><a href="<?php echo $this->webroot; ?>users/logout"><i class="fa fa-sign-out pull-right"></i> Cerrar Sesión</a></li>
 				  </ul>
 				</li>

@@ -37,7 +37,7 @@ class Postgres extends DboSource {
  */
 	protected $_baseConfig = array(
 		'persistent' => true,
-		'host' => 'localhost',
+		'host' => '192.168.1.100',
 		'login' => 'root',
 		'password' => '',
 		'database' => 'cake',

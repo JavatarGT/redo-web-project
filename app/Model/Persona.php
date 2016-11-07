@@ -10,7 +10,7 @@ App::uses('AppModel', 'Model');
 class Persona extends AppModel {
 
 	public $useTable = 'persona';
-	public $virtualFields = array('nombre_completo' => 'CONCAT('."Persona.primer_nombre, ' ', Persona.segundo_nombre, ' ', Persona.primer_apellido, ' ', Persona.segundo_apellido". ')');
+	public $virtualFields = array('nombre_completo' => 'CONCAT(Persona.primer_nombre, \' \', Persona.segundo_nombre, \' \', Persona.primer_apellido, \' \', Persona.segundo_apellido)');
 
 	public $belongsTo = array(
 		'Puesto' => array(
@@ -23,6 +23,20 @@ class Persona extends AppModel {
 		'User' => array(
 			'className' => 'User',
 			'foreignKey' => 'id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'Cons' => array(
+			'className' => 'Cons',
+			'foreignKey' => 'id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'Establecimiento' => array(
+			'className' => 'Establecimiento',
+			'foreignKey' => 'id_establecimiento',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

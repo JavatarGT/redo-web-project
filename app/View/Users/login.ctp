@@ -8,5 +8,11 @@
 				<?php echo $this->element('form_login') ?>
 			</section>
 		</div>
+
+		<div id="register" class="animate form registration_form">
+			<section class="login_content">
+				<?php echo $this->element('form_signin') ?>
+			</section>
+		</div>
 	</div>
 </div>

@@ -15,7 +15,21 @@ class Municipio extends AppModel {
     public $useTable = 'municipio';
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
-
+    public $hasMany = array(
+        'Establecimiento' => array(
+            'className' => 'Municipio',
+            'foreignKey' => 'id_departamento',
+            'dependent' => false,
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+            'offset' => '',
+            'exclusive' => '',
+            'finderQuery' => '',
+            'counterQuery' => ''
+        )
+    );
     public $belongsTo = array(
         'Departamento' => array(
             'className' => 'Departamento',
@@ -23,6 +37,19 @@ class Municipio extends AppModel {
             'conditions' => '',
             'fields' => '',
             'order' => ''
+        ),
+        'Establecimiento' => array(
+            'className' => 'Establecimiento',
+            'foreignKey' => 'id_departamento',
+            'dependent' => false,
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+            'offset' => '',
+            'exclusive' => '',
+            'finderQuery' => '',
+            'counterQuery' => ''
         )
     );
 

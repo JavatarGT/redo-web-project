@@ -34,7 +34,7 @@
 								<td><?php echo h($reg['Desembolso']['fecha']); ?>&nbsp;</td>
 								<td><?php echo $this->Html->link(__('<i class="fa fa-folder"></i> Ver'), array('action' => 'ver', $reg['Desembolso']['id']), array('class' => 'btn btn-round btn-primary', 'escape' => false));
 									echo '&nbsp;';
-									echo $this->Html->link(__('<i class="fa fa-edit"></i> Editar'), array('action' => 'edit', $reg['Desembolso']['id']), array('class' => 'btn btn-round btn-info', 'escape' => false));
+									echo $this->Html->link(__('<i class="fa fa-edit"></i> Editar'), array('action' => 'edit', $reg['Desembolso']['id'], $establ['Programa']['id']), array('class' => 'btn btn-round btn-info', 'escape' => false));
 								 ?></td>
 							</tr>
 						<?php endforeach; ?>
@@ -46,7 +46,10 @@
 </div><!-- /.row -->
 <?php $this->Js->buffer("
 	$('#datatable').DataTable({
-		fixedHeader: true
+		fixedHeader: true,
+		language: {
+            url: '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json'
+        }
 	});
 	");
 ?>

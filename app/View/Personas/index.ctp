@@ -10,7 +10,8 @@
 						<tr>
 							<th>Id</th>
 							<th>CUI</th>
-							<th>Nombres Completos</th>
+							<th>Primer Nombre</th>
+							<th>Primer Apellido</th>
 							<th>Direccion</th>
 							<th>Acciones</th>
 						</tr>
@@ -21,7 +22,8 @@
 							<tr>
 								<td><?php echo str_pad($reg['Persona']['id'], 4, "0", STR_PAD_LEFT); ?>&nbsp;</td>
 								<td><?php echo h($reg['Persona']['cui']); ?>&nbsp;</td>
-								<td><?php echo h($reg['Persona']['nombre_completo']); ?>&nbsp;</td>
+								<td><?php echo h($reg['Persona']['primer_nombre']); ?>&nbsp;</td>
+								<td><?php echo h($reg['Persona']['primer_apellido']); ?>&nbsp;</td>
 								<td><?php echo h($reg['Persona']['dir_residencia']); ?>&nbsp;</td>
 								<td><?php echo $this->Html->link(__('<i class="fa fa-folder"></i> Ver'), array('action' => 'ver', $reg['Persona']['id']), array('class' => 'btn btn-round btn-primary', 'escape' => false));
 									echo '&nbsp;';
@@ -36,7 +38,10 @@
 </div><!-- /.row -->
 <?php $this->Js->buffer("
 	$('#datatable').DataTable({
-		fixedHeader: true
+		fixedHeader: true,
+		language: {
+            url: '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json'
+        }
 	});
 	");
 ?>

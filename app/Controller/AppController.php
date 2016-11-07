@@ -22,8 +22,8 @@ App::uses('Controller', 'Controller');
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-	public $components = array('DebugKit.Toolbar', 'Auth', 'Acl', 'Session');
-	public $helpers = array('Html', 'Form', 'Session', 'AclHtml');
+	public $components = array('DebugKit.Toolbar', 'Auth', 'Acl', 'AclManager.AclManager', 'Session');
+	public $helpers = array('Html', 'Form', 'Session', 'AclManager.AclHtml');
 
 	function beforeFilter() {
 	    //Configure AuthComponent
@@ -51,6 +51,8 @@ class AppController extends Controller {
 			'plugin' => false,
 			'base' => false
 	    );
+
+	    $this->AclManager->set_session_permissions();
 	}
 
 	function isAuthorized($user) {

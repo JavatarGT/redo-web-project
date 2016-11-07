@@ -54,7 +54,10 @@
 				echo $this->Form->input('no_libro', array('label' => array('text'=> 'Libro No.'), 'type' => 'text' ));
 				echo '</div>';
 				echo '<div class="row">';
+				echo $this->Form->input('reglon', array('label' => array('text'=> 'Reglón Presupuestario.'), 'type' => 'text' ));
 				echo $this->Form->input('salario', array('label' => array('text'=> 'Salario Q.'), 'type' => 'text' ));
+				echo $this->Form->input('escalafon_mensual', array('label' => array('text'=> 'Escalafón Mensual Q.'), 'type' => 'text' ));
+				echo $this->Form->input('bono_bilinguismo', array('label' => array('text'=> 'Bono Bilingüismo Q.'), 'type' => 'text' ));
 				echo '</div>';
 				echo '<p> <legend>Contácto</legend></p>';
 				echo '<div class="row">';

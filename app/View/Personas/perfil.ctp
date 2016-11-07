@@ -14,12 +14,21 @@
 					<div class="profile_img">
 						<div id="crop-avatar">
 							<!-- Current avatar -->
-							<img class="img-responsive avatar-view" src="<?php echo $this->base.'/files/images/img1.jpg' ?>" alt="Avatar" title="Change the avatar">
+							<?php
+								if ($this->request->data['Persona']['dir_imagen'] != null){ ?>
+									<img class="img-responsive avatar-view" src="<?php echo $this->base.'/uploads/images/'.$this->request->data['Persona']['dir_imagen'] ?>" alt="Avatar" title="Change the avatar">
+							<?php
+								}else{ ?>
+								<img class="img-responsive avatar-view" src="<?php echo $this->base.'/files/images/img1.jpg' ?>" alt="Avatar" title="Change the avatar">
+							<?php
+								}
+							?>
+							
 						</div>
 					</div>
 					<h3><?php echo $this->request->data['Persona']['nombre_completo']; ?></h3>
 					<ul class="list-unstyled user_data">
-						<li><i class="fa fa-map-marker user-profile-icon"></i> COBÁN, ALTA VERAPAZ</li>
+						<li><i class="fa fa-map-marker user-profile-icon"></i> <?php echo $municipio['Municipio']['nombre'].', '.$municipio['Departamento']['nombre']; ?></li>
 					</ul>
 
 					<br />
@@ -27,28 +36,28 @@
 				<div class="col-md-9 col-sm-9 col-xs-12">
 					<div class="" role="tabpanel" data-example-id="togglable-tabs">
 						<ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-							<li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Actividad Reciente</a></li>
+							<!-- <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Actividad Reciente</a></li> -->
 							<li role="presentation" class=""><a href="#tab_content2" id="profile-tab" role="tab" data-toggle="tab" aria-expanded="true">Contácto</a></li>
 							<li role="presentation" class=""><a href="#tab_content3" id="profile-tab2" role="tab" data-toggle="tab" aria-expanded="true">Configuraciones</a></li>
 						</ul>
 						<div id="myTabContent" class="tab-content">
-							<div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+							<div role="tabpanel" class="tab-pane fade " id="tab_content1" aria-labelledby="home-tab">
 							<p>xxFood truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui
-                              photo booth letterpress, commodo enim craft beer mlkshk </p>
+							  photo booth letterpress, commodo enim craft beer mlkshk </p>
 							</div>
-							<div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+							<div role="tabpanel" class="tab-pane fade active in" id="tab_content2" aria-labelledby="profile-tab">
 								<!-- start panel contacts -->
 								<h4 class="heading"><i class="fa fa-phone"></i><span> Contácto</span></h4>
 								<p>
 									Teléfonos	: <?php echo $this->request->data['Persona']['nums_telefono']; ?> <br>
 								</p>
 								<p>
-									Email		: j<?php echo AuthComponent::user('email'); ?>
+									Email		: <?php echo AuthComponent::user('email'); ?>
 								</p>
 								<h4 class="heading"><i class="fa fa-map-marker"></i><span> Localización</span></h4>
 								<p>
-									Departamento	: Alta Verapaz <br>
-									Municipio		: Cobán 
+									Departamento	: <?php echo $municipio['Departamento']['nombre'] ?> <br>
+									Municipio		: <?php echo $municipio['Municipio']['nombre'] ?>
 								</p>
 								<p>
 									Dirección		: <?php echo $this->request->data['Persona']['dir_residencia']; ?>
@@ -61,6 +70,7 @@
 								'class' => '', 
 								'role' => 'form',
 								'autocomplete' => 'off',
+								'type' => 'file',
 								'inputDefaults' => array(
 									'format' => array('before', 'label', 'between', array('input', 'checkbox'), 'error', 'after'),
 									'div' => array('class' => 'form-group col-sm-6 col-lg-3 col-xs-12'),
@@ -71,11 +81,28 @@
 									'error' => array('attributes' => array('wrap' => 'span', 'class' => 'help-inline')),
 								)));
 								echo $this->Form->hidden('id');
+								echo $this->Form->hidden('id_puesto');
 								echo '<p> <legend>Identificaci&oacute;n</legend></p>';
 								echo '<div class="row">';
 								echo $this->Form->input('cui', array('label' => array('text'=> 'CUI')));
 								echo $this->Form->input('no_igss', array('label' => array('text'=> 'No. Afiliación de IGSS'), 'data-mask' => '999999999999'));
-								echo $this->Form->input('nit', array('label' => array('text'=> 'NIT')));
+								echo $this->Form->input('nit', array('label' => array('text'=> 'NIT'))); ?>
+
+								<div class="form-group col-sm-6 col-lg-3 col-xs-12">
+									<label></label>
+									<div class="controls">
+										<label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file">
+										<input type="file" class="sr-only" id="inputImage" name="data[Persona][archivo]" accept="image/*">
+										<span class="docs-tooltip" data-toggle="tooltip" title="Importar imagen">
+											<span class="fa fa-upload"></span>
+										</span>
+									</label>
+									</div>
+									
+								</div>
+								<?php
+								// echo $this->Form->input('archivo', array('type' => 'file', 'label' => array('text'=> 'Seleccionar Imagen')));
+								echo $this->Form->hidden('dir_imagen');
 								echo '</div>';
 								echo '<p> <legend>Informaci&oacute;n Personal</legend></p>';
 								echo '<div class="row">';
@@ -121,7 +148,7 @@
 								<div class="form-group col-sm-6 col-lg-3 col-xs-12">
 									<label for="PersonaPrimerNombre">Puesto</label>
 									<div class="controls">
-										<input name="data[Persona][id_puesto]" class="form-control" readonly value="<?php echo $this->request->data['Puesto']['nom_puesto']; ?>" id="PersonaPrimerNombre">
+										<input class="form-control" readonly value="<?php echo $this->request->data['Puesto']['nom_puesto']; ?>" id="PersonaPrimerNombre">
 									</div>
 								</div>
 								<?php

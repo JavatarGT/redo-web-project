@@ -40,7 +40,7 @@
 						<div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
 							<div class="row">
 								<div class="col-sm-3">
-									<a class="btn btn-info btnNuevaLinea" tabindex="8" href="#mdl">
+									<a class="btn btn-info btnNuevaLinea" tabindex="8">
 										<i class="fa fa-plus"></i> Nueva L&iacute;nea
 									</a>
 									<br>

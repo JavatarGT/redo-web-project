@@ -21,9 +21,9 @@
 						<tr>
 							<td><?php echo str_pad($reg['Establecimiento']['id'], 7, "0", STR_PAD_LEFT); ?>&nbsp;</td>
 							<td><?php echo h($reg['Establecimiento']['nombre']); ?>&nbsp;</td>
-							<td><?php echo h($reg['Establecimiento']['cod_departamento']); ?>&nbsp;</td>
-							<td><?php echo h($reg['Establecimiento']['cod_municipio']); ?>&nbsp;</td>
-							<td><?php echo h($reg['Establecimiento']['estado_activo']); ?>&nbsp;</td>
+							<td><?php echo h($reg['Departamento']['nombre']); ?>&nbsp;</td>
+							<td><?php echo h($reg['Municipio']['nombre']); ?>&nbsp;</td>
+							<td><?php echo h($reg['Establecimiento']['estado_activo'] == 1 ? 'Si' : 'No'); ?>&nbsp;</td>
 							<td><?php
 								echo $this->Html->link(__('<i class="fa fa-folder"></i> Ver'), array('action' => 'ver', $reg['Establecimiento']['id']), array('class' => 'btn btn-round btn-primary', 'escape' => false));
 								echo '&nbsp;';
@@ -40,7 +40,10 @@
 </div><!-- /.row -->
 <?php $this->Js->buffer("
 	$('#datatable').DataTable({
-		fixedHeader: true
+		fixedHeader: true,
+		language: {
+            url: '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json'
+        }
 	});
 	");
 ?>

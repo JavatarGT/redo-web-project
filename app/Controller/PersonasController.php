@@ -48,8 +48,8 @@ class PersonasController extends AppController {
 					if($param_name == "search"){
 						$conditions['OR'] = array(
 							array('lower(Persona.primer_nombre) LIKE' => '%' . strtolower($value) . '%'),
-    						array('lower(Persona.primer_apellido) LIKE' => '%' . strtolower($value) . '%'),
-    						array('Persona.cod_perfil <=' => 3)
+							array('lower(Persona.primer_apellido) LIKE' => '%' . strtolower($value) . '%'),
+							array('Persona.cod_perfil <=' => 3)
 						);
 					}			
 					$this->request->data['Filter'][$param_name] = $value;
@@ -88,18 +88,18 @@ class PersonasController extends AppController {
 
 	public function filterMunicipios(){
 		if(isset($this->request->data['Persona']['id_departamento']))
-        	$id = $this->request->data['Persona']['id_departamento'];
+			$id = $this->request->data['Persona']['id_departamento'];
 
-        if(isset($this->request->data['Establecimiento']['id_departamento']))
-        	$id = $this->request->data['Establecimiento']['id_departamento'];
+		if(isset($this->request->data['Establecimiento']['id_departamento']))
+			$id = $this->request->data['Establecimiento']['id_departamento'];
 
-        $municipios = $this->Municipio->find('list', array(
-                            'conditions' => array('Municipio.id_departamento' => $id),
-                            'fields' => array('Municipio.id','Municipio.nombre')
-                        ));
-        $this->set('municipios',$municipios);
-        $this->layout = 'ajax';
-    }
+		$municipios = $this->Municipio->find('list', array(
+							'conditions' => array('Municipio.id_departamento' => $id),
+							'fields' => array('Municipio.id','Municipio.nombre')
+						));
+		$this->set('municipios',$municipios);
+		$this->layout = 'ajax';
+	}
 
 /**
  * agregar method
@@ -109,8 +109,9 @@ class PersonasController extends AppController {
 	public function agregar() {
 		$this->set('title_for_layout', __('Nueva Persona'));
 		if ($this->request->is('post')) {
-			$this->request->data['Persona']['estado'] = 1; // 1 = Contratado, 2 = despedido, 3 = inactivo
-			$this->request->data['Persona']['fec_nacimiento'] = date('Y-m-d', strtotime($this->request->data['Persona']['fec_nacimiento']));
+			$this->request->data['Persona']['estado'] = 1;
+			$fecha = split('/', $this->request->data['Persona']['fec_nacimiento']);
+			$this->request->data['Persona']['fec_nacimiento']=$fecha[2].'-'.$fecha[1].'-'.$fecha[0];
 			$this->request->data['Persona']['fec_actualizacion'] = DboSource::expression('NOW()');
 			$this->request->data['Persona']['usr_actualizacion'] = AuthComponent::user('username');
 			$this->Persona->create();
@@ -151,7 +152,8 @@ class PersonasController extends AppController {
 			throw new NotFoundException(__('Registro inválido'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			$this->request->data['Persona']['fec_nacimiento'] = date('Y-d-m', strtotime($this->request->data['Persona']['fec_nacimiento']));
+			$fecha = split('/', $this->request->data['Persona']['fec_nacimiento']);
+			$this->request->data['Persona']['fec_nacimiento']=$fecha[2].'-'.$fecha[1].'-'.$fecha[0];
 			if ($this->Persona->save($this->request->data)) {
 				$this->Session->setFlash(__('La información del personal ha sido guardada.'),'flash_success');
 				$this->redirect(array('action' => 'index'));
@@ -166,9 +168,9 @@ class PersonasController extends AppController {
 		$this->set(compact('departamentos'));
 
 		$municipios = $this->Municipio->find('list', array(
-                            'conditions' => array('Municipio.id' => $this->request->data['Persona']['id_municipio']),
-                            'fields' => array('Municipio.id','Municipio.nombre')
-                        ));
+							'conditions' => array('Municipio.id' => $this->request->data['Persona']['id_municipio']),
+							'fields' => array('Municipio.id','Municipio.nombre')
+						));
 		$this->set(compact('municipios'));
 
 		$tipo_sangre = $this->Tiposangre->find('list');
@@ -220,6 +222,16 @@ class PersonasController extends AppController {
 	public function perfil($id = null) {
 		$this->set('title_for_layout', __('Perfil de Usuario'));
 		if ($this->request->is('post') || $this->request->is('put')) {
+			if( $this->data['Persona']['archivo']['error'] == 0 &&  $this->data['Persona']['archivo']['size'] > 0)
+            {
+            	$destino = WWW_ROOT.'uploads'.DS.'images'.DS;
+            	$archivo = $this->data['Persona']['archivo'];
+            	$nombre = $this->convert_filename_to_md5($archivo['name']);
+	            if(move_uploaded_file($archivo['tmp_name'], $destino.$nombre))
+	            {          
+	            	$this->request->data['Persona']['dir_imagen'] = $nombre;
+	            }
+            }
 			$this->request->data['Persona']['fec_nacimiento'] = date('Y-m-d', strtotime($this->request->data['Persona']['fec_nacimiento']));
 			if ($this->Persona->save($this->request->data)) {
 				$this->Session->setFlash(__('La información del perfil ha sido guardada.'),'flash_success');
@@ -235,9 +247,9 @@ class PersonasController extends AppController {
 		$this->set(compact('departamentos'));
 
 		$municipios = $this->Municipio->find('list', array(
-                            'conditions' => array('Municipio.id' => $this->request->data['Persona']['id_municipio']),
-                            'fields' => array('Municipio.id','Municipio.nombre')
-                        ));
+							'conditions' => array('Municipio.id' => $this->request->data['Persona']['id_municipio']),
+							'fields' => array('Municipio.id','Municipio.nombre')
+						));
 		$this->set(compact('municipios'));
 
 		$tipo_sangre = $this->Tiposangre->find('list');
@@ -248,5 +260,25 @@ class PersonasController extends AppController {
 			)
 		);
 		$this->set(compact('establecimiento'));
+
+		$municipio = $this->Municipio->find('first', array(
+			'conditions'=>array('Municipio.id'=>$this->request->data['Persona']['id_municipio'])
+			)
+		);
+		$this->set('municipio',$municipio);		
+	}
+
+	private function convert_filename_to_md5($filename) { 
+	    $filename_parts = explode('.',$filename);
+	    $count = count($filename_parts);
+	    if($count> 1) {
+	        $ext = $filename_parts[$count-1];
+	        unset($filename_parts[$count-1]);
+	        $filename_to_md5 =  implode('.',$filename_parts);
+	        $newName = md5($filename_to_md5). '.' . $ext ;
+	    } else {
+	        $newName = md5($filename);
+	    }        
+	    return $newName;
 	}
 }

@@ -34,12 +34,15 @@
 	
 	<div class="row">
 		<div class="form-group col-md-8">
-			<input type="submit" class="btn btn-primary" value="Entrar">
+			<input type="submit" class="btn btn-default" value="Entrar">
 		</div>
 	</div>
 	<div class="clearfix"></div>
 
 	<div class="separator">
+		<p class="change_link">Nuevo en el sitio?
+			<a href="#signup" class="to_register"> Crear Cuenta </a>
+		</p>
 		<div class="clearfix"></div>
 		<div>
 			<!-- <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1> -->

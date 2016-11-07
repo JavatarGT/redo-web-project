@@ -7,12 +7,12 @@ App::uses('AppController', 'Controller');
  */
 class UsersController extends AppController {
 
-	public $uses = array('User', 'Group', 'Persona');
+	public $uses = array('User', 'Group', 'Persona', 'Establecimiento', 'Authtmp');
 
 	public function beforeFilter() {
     	parent::beforeFilter();
     	
-    	$this->Auth->allow();   	
+    	$this->Auth->allow();
     //$this->Auth->allow('add');
 
 	}
@@ -28,7 +28,8 @@ class UsersController extends AppController {
 	            $this->Session->setFlash('Acceso denegado - nombre de usuario o contraseña incorrectos.','flash_fail');
 	        }
 	    }
-
+	    $establecimientos = $this->Establecimiento->find('list');
+	    $this->set('establecimientos', $establecimientos);
 	}
 
 	public function logout() {
@@ -148,4 +149,52 @@ class UsersController extends AppController {
 		$this->Session->setFlash(__('El usuario no ha sido eliminado'),'flash_fail');
 		$this->redirect(array('action' => 'index'));
 	}
+
+/**
+ * signing method
+ *
+ * @throws MethodNotAllowedException
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */	
+	public function signin(){
+		if ($this->request->is('post')) {
+			$username = $this->request->data['User']['username'];
+			$email = $this->request->data['User']['email'];
+			$count = $this->User->find('count', array(
+				'conditions' => array('User.username LIKE '=>'%'.$username.'%'),
+				'recursive'=>-1
+				)
+			);
+			$count1 = $this->Authtmp->find('count', array(
+				'conditions' => array('Authtmp.username LIKE '=>'%'.$username.'%'),
+				'recursive'=>-1
+				)
+			);
+			if($count>0 || $count1>0){
+				$this->Session->setFlash(__('El usuario ya existe, intente otro nombre de usuario.'),'flash_fail');
+				$this->redirect(array('action' => 'login'));
+			}else{
+				$dato_persona = array(
+					'primer_nombre' => $this->request->data['User']['primer_nombre'],
+					'primer_apellido' => $this->request->data['User']['primer_apellido'],
+					'username' => $this->request->data['User']['username'],
+					'password' => $this->request->data['User']['password'],
+					'email' => $this->request->data['User']['email'],
+					'id_establecimiento' => $this->request->data['User']['id_establecimiento'],
+					'estado_activo' => 0
+				);
+				$this->Authtmp->create();
+				if($this->Authtmp->save($dato_persona)){
+					$this->Session->setFlash(__('El usuario ha sido registrado, espere la confirmación del administrador del sitio.'),'flash_success');
+					$this->redirect(array('action' => 'login'));
+				}else{
+					$this->Session->setFlash(__('Hubo un problema al procesar la informacións.'),'flash_fail');
+					$this->redirect(array('action' => 'login'));
+				}
+			}
+		}
+	}
+
 }

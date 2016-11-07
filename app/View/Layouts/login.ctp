@@ -28,13 +28,15 @@
 
 </head>
 <body  class="hold-transition login">
+  <div class="clearfix"></div>
     <?php echo $this->Session->flash(); ?>
     <?php echo $this->fetch('content'); ?>
 
   <?php echo $this->Html->script(
   array(
     'jquery/jquery.min',
-    'bootstrap/bootstrap.min',
+    'validation/bootstrapValidator',
+    'bootstrap/bootstrap.min'
   ));
   echo $this->Js->writeBuffer(); ?>
 </body>

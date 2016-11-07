@@ -17,11 +17,11 @@
 					</tr>
 					<tr>
 						<td><?php echo __('Departamento ubicación'); ?></td>
-						<td><?php echo h($establecimiento['Establecimiento']['cod_departamento']); ?>&nbsp;</td>
+						<td><?php echo h($establecimiento['Departamento']['nombre']); ?>&nbsp;</td>
 					</tr>
 					<tr>
 						<td><?php echo __('Municipio ubicación'); ?></td>
-						<td><?php echo h($establecimiento['Establecimiento']['cod_municipio']); ?>&nbsp;</td>
+						<td><?php echo h($establecimiento['Municipio']['nombre']); ?>&nbsp;</td>
 					</tr>
 					<tr>
 						<td><?php echo __('Observaciones'); ?></td>
